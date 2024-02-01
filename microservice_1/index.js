@@ -37,5 +37,6 @@ app.get('/convert/dollartoinr/:number', async (req, res) => {
         })
     } catch (e) {
         console.error(e)
+        res.send(e)
     }
 })

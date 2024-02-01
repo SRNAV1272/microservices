@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: exchange
+  labels:
+    run: exchange
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    run: exchange
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exchange
+spec:
+  selector:
+    matchLabels:
+      run: exchange
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: exchange
+    spec:
+      containers:
+        - name: exchange-container
+          image: srgmaildocker/exchange:v.0.0.1
+          env:
+            - name: PORT
+              value: '80'
+          ports:
+            - containerPort: 80

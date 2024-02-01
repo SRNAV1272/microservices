@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: convert
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: convert
+  template:
+    metadata:
+      labels:
+        app: convert
+    spec:
+      containers:
+        - name: convert
+          image: nginx
+          ports:
+            - containerPort: 80
