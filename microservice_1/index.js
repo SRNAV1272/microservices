@@ -4,19 +4,18 @@ import axios from 'axios'
 
 const app = new express()
 const port = process.env.PORT === undefined ? 5001 : parseInt(process.env.PORT)
-const exchangeDenomination = process.env.Exchange_Denomination === undefined ?
-    'http://localhost:5000/convert/dollartoinr' :
-    process.env.Exchange_Denomination
+const exchangeDomain = process.env.Exchange_Domain === undefined ?
+    'http://localhost:5000' :
+    process.env.Exchange_Domain
 
 const routes = [
     '/'
 ]
-// http://localhost:5000/convert/dollartoinr
+
 app.use(cors())
 
 app.listen(port, () => {
     console.log(process.env.PORT)
-    console.log(exchangeDenomination)
     console.log(`Server is Listening at port ${port} !`)
 })
 
@@ -28,9 +27,9 @@ app.get(routes, (req, res) => {
 
 app.get('/convert/dollartoinr/:number', async (req, res) => {
 
-    console.log(exchangeDenomination)
+    console.log(`${exchangeDomain}/`)
     try {
-        const result = await axios.get(exchangeDenomination)
+        const result = await axios.get(`${exchangeDomain}/convert/dollartoinr`)
         console.log(result.data)
         res.send({
             number: req.params.number * result.data.number

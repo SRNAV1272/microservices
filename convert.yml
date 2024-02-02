@@ -30,11 +30,11 @@ spec:
     spec:
       containers:
         - name: convert-container
-          image: srgmaildocker/convert:v.0.0.2
+          image: srgmaildocker/convert:v.0.0.3
           env:
             - name: PORT
               value: '80'
-            - name: Exchange_Denomination
-              value: 'http://exchange/convert/dollartoinr'
+            - name: Exchange_Domain
+              value: 'http://exchange'
           ports:
             - containerPort: 80
