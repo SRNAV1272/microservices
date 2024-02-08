@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  labels:
+    run: postgres
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 81
+    targetPort: 5432
+    protocol: TCP
+    name: http
+  # - port: 443
+  #   protocol: TCP
+  #   name: https
+  selector:
+    run: postgres
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin4
+  labels:
+    run: pgadmin4
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  # - port: 443
+  #   protocol: TCP
+  #   name: https
+  selector:
+    run: pgadmin4
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin4
+spec:
+  selector:
+    matchLabels:
+      run: pgadmin4
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: pgadmin4
+    spec:
+      containers:
+      - name: pgadmin4
+        image: dpage/pgadmin4
+        env:
+        - name: 'PGADMIN_DEFAULT_EMAIL'
+          value: 'postgres@postgres.com'
+        - name: 'PGADMIN_DEFAULT_PASSWORD'
+          value: 'postgres'
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      run: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres
+        env:
+        - name: 'POSTGRES_USER'
+          value: 'postgres'
+        - name: 'POSTGRES_PASSWORD'
+          value: 'postgres123'
+        - name: 'POSTGRES_DB'
+          value: 'postgres'
+        ports:
+        - containerPort: 5432
+        # - containerPort: 443
+        # volumeMounts:
+        # - mountPath: /etc/nginx/ssl
+        #   name: secret-volume
+        # - mountPath: /etc/nginx/conf.d
+        #   name: configmap-volume
+      # volumes:
+      # - name: secret-volume
+      #   secret:
+      #     secretName: nginxsecret
+      # - name: configmap-volume
+      #   configMap:
+      #     name: nginxconfigmap

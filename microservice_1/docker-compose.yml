@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:14-alpine
+    ports:
+      - "6000:5432"
+    volumes:
+      - hostdb:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: '5160'
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "6001:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@mail.com
+      PGADMIN_DEFAULT_PASSWORD: '5160'
+    depends_on:
+      - db
+volumes:
+  hostdb:

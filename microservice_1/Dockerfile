@@ -1,12 +1,13 @@
 FROM node:20.10
 
-WORKDIR /
+WORKDIR /app
 
-COPY package.json ./
+COPY package.json .
 
 RUN npm install
 
 COPY ./index.js .
+COPY ./database.cjs .
 
 EXPOSE 80
 
